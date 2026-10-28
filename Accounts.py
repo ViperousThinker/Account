@@ -52,12 +52,11 @@ class Handles:
 class Account:
     def __init__(self, choice, data):
         self.data = data
-        self.sign_config = self.Signs()
-        self.log_config = self.Log()
-        if choice.upper == "SIGN":
-                self.sign_config
+        if choice[:4].upper == "SIGN":
+                if choice[:-2].upper == "UP":
+                    self.Sign(choice=up)
         elif choice.upper == "LOG":
-                self.log_config
+                self.Log()
 
     class Signs:
         class Up:
@@ -148,4 +147,4 @@ except FileNotFoundError:
     data = []
     filefound = False
 
-Account(data=data).signup()
+Account(choice=sign, data=data)
