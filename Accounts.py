@@ -7,6 +7,7 @@ script = os.path.dirname(os.path.abspath(__file__))
 acc = os.path.join(script, "Acc.json")
 tempacc = os.path.join(script, "TempAcc.json")
 
+
 class Handles:
     def __init__(self):
         self.warnconfig = self.Warn()
@@ -19,7 +20,7 @@ class Handles:
                 "call": "\033[4;38;5;142m",
                 "detail": "\033[0;38;5;144m",
                 "normal": "\033[0m",
-                "emphasis": "\033[1;38;5;150m"
+                "emphasis": "\033[1;38;5;150m",
             }
 
         def FileNotFoundWarn(self, Ifile, Idir):
@@ -37,7 +38,7 @@ class Handles:
                 "call": "\033[4;16;1;160m",
                 "detail": "\033[0;16;1;88m",
                 "normal": "\033[0m",
-                "emphasis": "\033[1;16;1;20m"
+                "emphasis": "\033[1;16;1;20m",
             }
 
     class Tip:
@@ -46,65 +47,83 @@ class Handles:
                 "call": "\033[4;232;8;241m",
                 "detail": "\033[0;232;8;245m",
                 "normal": "\033[0m",
-                "emphasis": "\033[1;232;8;250m"
+                "emphasis": "\033[1;232;8;250m",
             }
+
+
+try:
+    with open(acc, "r", encoding="utf-8") as file:
+        data = j.load(file)
+    filefound = True
+except FileNotFoundError:
+    Handles().warnconfig.FileNotFoundWarn(Ifile="Acc.json", Idir=acc)
+    data = []
+    filefound = False
+except j.JSONDecodeError:
+    data = []
+    filefound = False
+
 
 class Account:
     def __init__(self, choice, data):
         self.data = data
-        if choice[:4].upper == "SIGN":
-            if choice[:-2].upper == "UP":
-                self.Sign(choice=up)
-        elif choice.upper == "LOG":
-            self.Log()
+        choice = str(choice).strip()
+        choice_lower = choice.lower()
+
+        if choice_lower in {"sign", "sign up", "signup"}:
+            self.Sign.Up(choice="UP", data=self.data)
+        elif choice_lower in {"log", "log in", "login"}:
+            self.Log.In()
 
     class Sign:
         class Up:
-            def __init__(self, choice):
-                if choice.upper() == "UP"
+            def __init__(self, choice, data):
+                self.data = data
+                if str(choice).upper() == "UP":
                     self.username_check()
                     self.password_check()
+                    self.data_setup()
+                    self.data_add()
 
             def username_check(self):
                 u_unique = False
-                while u_unique == False:
+                while not u_unique:
                     username = input("Enter a username: ")
                     for users in self.data:
-                        if username.lower() == users['USERNAME'].lower():
-                            u_unique = False
+                        if isinstance(users, dict) and username.lower() == str(users.get("USERNAME", "")).lower():
                             print(f"Username: '{username}' is already taken.\nPlease Try Again")
                             break
                     else:
+                        self.username = username
                         u_unique = True
-                        break
-                    self.username = username
 
             def password_check(self):
                 p_same = False
-                while p_same == False:
+                while not p_same:
                     password1 = input("Enter a password: ")
                     password2 = input("Reenter your password: ")
                     if password1 == password2:
+                        self.password = password1
                         p_same = True
-                        break
                     else:
-                        p_same = False
-                        print(f"the password reentered was not the same as the set password.\nPlease Try Again.")
-                self.password = password1
+                        print("the password reentered was not the same as the set password.\nPlease Try Again.")
 
-            def data_setup(self)
+            def data_setup(self):
                 add_data = {
                     "USERNAME": self.username,
-                    "PASSWORD": self.password
+                    "PASSWORD": self.password,
                 }
                 self.data.append(add_data)
 
-            def data_add():
-                if filefound:
-                    with open(acc, 'w') as file:
+            def data_add(self):
+                global filefound
+                if os.path.exists(acc):
+                    filefound = True
+                    with open(acc, "w", encoding="utf-8") as file:
                         j.dump(self.data, file)
                 else:
-                    with open(tempacc, 'w') as file:
+                    filefound = False
+                    with open(tempacc, "w", encoding="utf-8") as file:
                         j.dump(self.data, file)
 
         class In:
@@ -134,7 +153,7 @@ class Account:
         pass
 
     def __str__(self):
-        pass
+        return str(self.data)
 
     def RemoveAccount(self):
         pass
@@ -145,13 +164,6 @@ class Account:
     def __del__(self):
         pass
 
-try:
-    with open(acc, 'r') as file:
-        data = j.load(file)
-        filefound = True
-except FileNotFoundError:
-    Handles().warnconfig.FileNotFoundWarn(Ifile="Acc.json", Idir=acc)
-    data = []
-    filefound = False
 
-Account(choice=sign, data=data)
+if __name__ == "__main__":
+    Account(choice="sign up", data=data)
