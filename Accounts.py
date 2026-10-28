@@ -50,55 +50,70 @@ class Handles:
                 }
 
 class Account:
-    def __init__(self, data):
+    def __init__(self, choice, data):
         self.data = data
+        self.sign_config = self.Signs()
+        self.log_config = self.Log()
+        if choice.upper == "SIGN":
+                self.sign_config
+        elif choice.upper == "LOG":
+                self.log_config
 
-    def router(self):
-        pass
+    class Signs:
+        class Up:
+             def __init__(self, choice):
+                if choice.upper() == "UP"
+                     self.username_check()
+                     self.password_check()
 
-    def signup(self):
-        u_unique = False
-        while u_unique == False:
-            username = input("Enter a username: ")
-            for users in self.data:
-                if username.lower() == users['USERNAME'].lower():
-                    u_unique = False
-                    print(f"Username: '{username}' is already taken.\nPlease Try Again")
-                    break
-            else:
-                u_unique = True
-                break
+             def username_check(self):
+                     u_unique = False
+                     while u_unique == False:
+                        username = input("Enter a username: ")
+                        for users in self.data:
+                            if username.lower() == users['USERNAME'].lower():
+                                u_unique = False
+                                print(f"Username: '{username}' is already taken.\nPlease Try Again")
+                                break
+                        else:
+                            u_unique = True
+                            break
+                        self.username = username
 
-        p_same = False
-        while p_same == False:
-            password1 = input("Enter a password: ")
-            password2 = input("Reenter your password: ")
-            if password1 == password2:
-                p_same = True
-                break
-            else:
+             def password_check(self):
                 p_same = False
-                print(f"the password reentered was not the same as the set password.\nPlease Try Again.")
-        
-        add_data = {
-            "USERNAME": username,
-            "PASSWORD": password1
-        }
-        
-        self.data.append(add_data)
+                while p_same == False:
+                    password1 = input("Enter a password: ")
+                    password2 = input("Reenter your password: ")
+                    if password1 == password2:
+                        p_same = True
+                        break
+                    else:
+                        p_same = False
+                        print(f"the password reentered was not the same as the set password.\nPlease Try Again.")
+                self.password = password1
 
-        if filefound:
-            with open(acc, 'w') as file:
-                j.dump(self.data, file)
-        else:
-            with open(tempacc, 'w') as file:
-                j.dump(self.data, file)
+             def data_setup(self)
+                add_data = {
+                    "USERNAME": self.username,
+                    "PASSWORD": self.password
+                }
+                self.data.append(add_data)
         
+             def data_add():
+                    if filefound:
+                        with open(acc, 'w') as file:
+                            j.dump(self.data, file)
+                   else:
+                        with open(tempacc, 'w') as file:
+                            j.dump(self.data, file)
+                                
     def get_registers(self):
         pass
 
-    def signin(self):
-        pass
+    class Log:
+        def __init__(self):
+            pass
 
     def get_logins(self):
         pass
